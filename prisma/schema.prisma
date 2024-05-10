@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id
+
+  outfitId String
+  outfit   UserOutfit @relation(fields: [outfitId], references: [id])
+}
+
+model UserOutfit {
+  id String @id
+
+  toConnect1Id    String
+  toConnect1      OutfitPart  @relation(name: "toConnect1", fields: [toConnect1Id], references: [id])
+  toConnect2Id    String
+  toConnect2      OutfitPart  @relation(name: "toConnect2", fields: [toConnect2Id], references: [id])
+  toDisconnect1Id String?
+  toDisconnect1   OutfitPart?  @relation(name: "toDisconnect1", fields: [toDisconnect1Id], references: [id])
+  toDisconnect2Id String?
+  toDisconnect2   OutfitPart?  @relation(name: "toDisconnect2", fields: [toDisconnect2Id], references: [id])
+  toDisconnect3Id String?
+  toDisconnect3   OutfitPart? @relation(name: "toDisconnect3", fields: [toDisconnect3Id], references: [id])
+  User            User[]
+}
+
+model OutfitPart {
+  id          String       @id
+  // ...
+  UserOutfit  UserOutfit[] @relation(name: "toConnect1")
+  UserOutfit2 UserOutfit[] @relation(name: "toConnect2")
+  UserOutfit3 UserOutfit[] @relation(name: "toDisconnect1")
+  UserOutfit4 UserOutfit[] @relation(name: "toDisconnect2")
+  UserOutfit5 UserOutfit[] @relation(name: "toDisconnect3")
+}
